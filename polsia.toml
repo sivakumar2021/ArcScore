@@ -1,0 +1,12 @@
+[app]
+name = "arcscore"
+
+[[crons]]
+name = "send-reminders"
+schedule = "0 * * * *"
+command = "node jobs/send-reminders.js"
+
+[[crons]]
+name = "send-drip"
+schedule = "0 * * * *"
+command = "node jobs/send-drip.js"
