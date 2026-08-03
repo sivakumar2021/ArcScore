@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "npm run migrate && node server.js",
     "dev": "node server.js",
-    "build": "npm run migrate",
     "migrate": "node migrate.js",
     "test": "node --test test/*.test.js"
   },

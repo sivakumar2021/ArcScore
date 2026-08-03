@@ -140,6 +140,11 @@ async function runFolderMigrations(client) {
 }
 
 migrate().catch(err => {
-  console.error('Migration failed:', err.message);
+  console.error('Migration failed:', err.stack || err.message || err);
+  // AggregateError (e.g. from failed dual-stack DB connection attempts) has
+  // an empty top-level .message — the real per-attempt errors are here.
+  if (Array.isArray(err.errors)) {
+    for (const inner of err.errors) console.error('  caused by:', inner.stack || inner.message || inner);
+  }
   process.exit(1);
 });
