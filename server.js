@@ -79,7 +79,7 @@ app.get('/health', (req, res) => res.json({ status: 'healthy' }));
 
 // ─── STATIC FILES ───
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'static')));
 
 // ─── API ROUTES ───
 
@@ -156,7 +156,7 @@ app.get('/sitemap.xml', (req, res) => {
 // Landing page
 app.get('/', (req, res) => {
   const slug = process.env.POLSIA_ANALYTICS_SLUG || '';
-  const htmlPath = path.join(__dirname, 'public', 'index.html');
+  const htmlPath = path.join(__dirname, 'static', 'index.html');
   if (fs.existsSync(htmlPath)) {
     let html = fs.readFileSync(htmlPath, 'utf8');
     html = html.replace('__POLSIA_SLUG__', slug).replace('__GA_SNIPPET__', gaSnippet());
@@ -180,7 +180,7 @@ const APP_ROUTE_META = {
 
 function serveAppWithMeta(meta, routePath) {
   return (req, res) => {
-    const htmlPath = path.join(__dirname, 'public', 'app.html');
+    const htmlPath = path.join(__dirname, 'static', 'app.html');
     let html = fs.readFileSync(htmlPath, 'utf8');
     html = html
       .replace(/__PAGE_TITLE__/g, meta.title)
@@ -213,7 +213,7 @@ app.get('/results/gallery', serveAppWithMeta({
 }, '/results/gallery'));
 
 app.get('/results/:id', (req, res) => {
-  const htmlPath = path.join(__dirname, 'public', 'app.html');
+  const htmlPath = path.join(__dirname, 'static', 'app.html');
   let html = fs.readFileSync(htmlPath, 'utf8');
   html = html
     .replace(/__PAGE_TITLE__/g, 'Your ArcScore Results')
@@ -264,7 +264,7 @@ app.get('/shared/:token', async (req, res) => {
     // Non-fatal: serve with default meta if DB query fails
   }
 
-  const htmlPath = path.join(__dirname, 'public', 'shared.html');
+  const htmlPath = path.join(__dirname, 'static', 'shared.html');
   let html = fs.readFileSync(htmlPath, 'utf8');
   html = html
     .replace(/__SHARE_TITLE__/g, title)
@@ -281,7 +281,7 @@ app.use('/payment', subscriptionRoutes);
 // Admin metrics dashboard — served from app shell with embedded page
 // Pricing page — dedicated static page
 app.get('/pricing', (req, res) => {
-  const htmlPath = path.join(__dirname, 'public', 'pricing.html');
+  const htmlPath = path.join(__dirname, 'static', 'pricing.html');
   if (fs.existsSync(htmlPath)) {
     let html = fs.readFileSync(htmlPath, 'utf8');
     html = html.replace('__GA_SNIPPET__', gaSnippet());
@@ -293,7 +293,7 @@ app.get('/pricing', (req, res) => {
 
 // Admin metrics dashboard — served from app shell with embedded page
 app.get('/admin/metrics', (req, res) => {
-  const htmlPath = path.join(__dirname, 'public', 'admin-metrics.html');
+  const htmlPath = path.join(__dirname, 'static', 'admin-metrics.html');
   if (fs.existsSync(htmlPath)) {
     res.type('html').sendFile(htmlPath);
   } else {
@@ -303,7 +303,7 @@ app.get('/admin/metrics', (req, res) => {
 
 // Admin leads inbox — lists per-reply audit rows from lead_replies
 app.get('/admin/leads/inbox', (req, res) => {
-  const htmlPath = path.join(__dirname, 'public', 'admin-leads-inbox.html');
+  const htmlPath = path.join(__dirname, 'static', 'admin-leads-inbox.html');
   if (fs.existsSync(htmlPath)) {
     res.type('html').sendFile(htmlPath);
   } else {
