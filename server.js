@@ -30,6 +30,14 @@ const scoresRoutes = require('./routes/scores');
 const app = express();
 const port = process.env.PORT || 3000;
 
+function createSessionStore() {
+  if (process.env.DATABASE_URL) {
+    return new PgSession({ pool, createTableIfMissing: true });
+  }
+
+  return new (require('express-session').Store)();
+}
+
 function gaSnippet() {
   const id = process.env.GA_MEASUREMENT_ID;
   if (!id) return '';
@@ -53,7 +61,7 @@ app.set('trust proxy', 1);
 
 // Sessions backed by PostgreSQL
 app.use(session({
-  store: new PgSession({ pool, createTableIfMissing: true }),
+  store: createSessionStore(),
   secret: process.env.SESSION_SECRET || 'REDACTED',
   resave: false,
   saveUninitialized: false,
