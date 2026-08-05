@@ -20,12 +20,19 @@
  *     }
  *   };
  */
+require('dotenv').config();
 const { Pool } = require('pg');
 const fs = require('fs');
 const path = require('path');
 
+if (!process.env.DATABASE_URL) {
+  console.error('ERROR: DATABASE_URL environment variable is required');
+  process.exit(1);
+}
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false }
 });
 
 async function migrate() {

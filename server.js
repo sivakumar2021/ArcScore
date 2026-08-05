@@ -1,5 +1,6 @@
 // server.js — entry point. Wires middleware, mounts routes, starts listener.
 // All business logic lives in routes/ and db/. Keep this file under 300 lines.
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
