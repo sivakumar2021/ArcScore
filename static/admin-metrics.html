@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArcScore — Admin Metrics</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0f11;
+      --surface: #18181c;
+      --border: #2a2a33;
+      --text: #e8e8ec;
+      --muted: #888896;
+      --accent: #6d66ff;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #f59e0b;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
+    header .badge {
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .refresh-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: border-color 0.2s;
+    }
+    .refresh-btn:hover { border-color: var(--accent); }
+
+    /* Auth gate */
+    #auth-gate {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 400px;
+      margin: 4rem auto;
+    }
+    #auth-gate h2 { font-size: 1.1rem; margin-bottom: 1.5rem; }
+    #auth-gate input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      outline: none;
+    }
+    #auth-gate input:focus { border-color: var(--accent); }
+    #auth-gate button {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #auth-error { color: var(--red); font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+
+    /* Metrics layout */
+    #metrics { display: none; }
+    .as-of { color: var(--muted); font-size: 0.8rem; margin-bottom: 2rem; }
+
+    .section-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      margin-top: 2rem;
+    }
+
+    .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .card .label { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.4rem; }
+    .card .value { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; }
+    .card .value.green { color: var(--green); }
+    .card .value.yellow { color: var(--yellow); }
+    .card .sub { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+
+    /* Funnel table */
+    .funnel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 0.75rem;
+    }
+    .funnel table { width: 100%; border-collapse: collapse; }
+    .funnel th, .funnel td {
+      text-align: left;
+      padding: 0.8rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .funnel th { color: var(--muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .funnel tr:last-child td { border-bottom: none; }
+    .funnel .bar-cell { width: 200px; }
+    .bar-bg { background: var(--border); border-radius: 4px; height: 8px; overflow: hidden; }
+    .bar-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.5s ease; }
+
+    .loading { color: var(--muted); text-align: center; padding: 4rem; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <h1>ArcScore Metrics <span class="badge">Admin</span></h1>
+    </div>
+    <button class="refresh-btn" onclick="loadMetrics()">↻ Refresh</button>
+  </header>
+
+  <!-- Auth gate -->
+  <div id="auth-gate">
+    <h2>Admin Access</h2>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem;">Enter the admin secret to view metrics.</p>
+    <input type="password" id="secret-input" placeholder="Admin secret" autocomplete="off">
+    <button onclick="tryAuth()">View Metrics</button>
+    <div id="auth-error">Incorrect secret — check ADMIN_SECRET env var.</div>
+  </div>
+
+  <!-- Metrics -->
+  <div id="metrics">
+    <p class="as-of" id="as-of"></p>
+
+    <div class="section-title">Users</div>
+    <div class="grid">
+      <div class="card"><div class="label">Total Users</div><div class="value" id="total-users">—</div></div>
+      <div class="card"><div class="label">Signups This Week</div><div class="value green" id="signups-week">—</div></div>
+      <div class="card"><div class="label">Active This Week</div><div class="value" id="active-week">—</div></div>
+    </div>
+
+    <div class="section-title">Assessments</div>
+    <div class="grid">
+      <div class="card"><div class="label">Total Completed</div><div class="value" id="total-assessments">—</div></div>
+      <div class="card"><div class="label">Completed This Week</div><div class="value green" id="assessments-week">—</div></div>
+      <div class="card"><div class="label">Unique Users Assessed</div><div class="value" id="unique-assessed">—</div></div>
+      <div class="card"><div class="label">Avg Days Between</div><div class="value" id="avg-between">—</div><div class="sub">per user</div></div>
+      <div class="card"><div class="label">Completion Rate (30d)</div><div class="value yellow" id="completion-rate">—</div><div class="sub">started → finished</div></div>
+    </div>
+
+    <div class="section-title">Retention</div>
+    <div class="grid">
+      <div class="card"><div class="label">Users 2+ Assessments</div><div class="value" id="two-plus">—</div></div>
+      <div class="card"><div class="label">Retention Rate</div><div class="value green" id="retention-rate">—</div><div class="sub">2+ assessments / total</div></div>
+      <div class="card"><div class="label">Avg Days 1st→2nd</div><div class="value" id="avg-first-second">—</div></div>
+      <div class="card"><div class="label">Returned in 30 Days</div><div class="value" id="returned-30">—</div></div>
+    </div>
+
+    <div class="section-title">Signup Funnel</div>
+    <div class="funnel">
+      <table>
+        <thead>
+          <tr><th>Step</th><th>Count</th><th class="bar-cell">Relative</th></tr>
+        </thead>
+        <tbody id="funnel-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  let adminSecret = sessionStorage.getItem('arcscore_admin_secret') || '';
+
+  // Try cookie-based auth (logged-in admin user) first on load
+  window.addEventListener('DOMContentLoaded', () => {
+    if (adminSecret) {
+      loadMetrics();
+    }
+    document.getElementById('secret-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') tryAuth();
+    });
+  });
+
+  function tryAuth() {
+    const val = document.getElementById('secret-input').value.trim();
+    if (!val) return;
+    adminSecret = val;
+    sessionStorage.setItem('arcscore_admin_secret', val);
+    loadMetrics();
+  }
+
+  async function loadMetrics() {
+    document.getElementById('auth-gate').style.display = 'none';
+    document.getElementById('metrics').style.display = 'none';
+
+    try {
+      const res = await fetch('/api/admin/metrics', {
+        headers: adminSecret ? { 'X-Admin-Secret': adminSecret } : {},
+        credentials: 'include'
+      });
+
+      if (res.status === 403) {
+        document.getElementById('auth-error').style.display = 'block';
+        document.getElementById('auth-gate').style.display = 'block';
+        sessionStorage.removeItem('arcscore_admin_secret');
+        adminSecret = '';
+        return;
+      }
+
+      const data = await res.json();
+      renderMetrics(data);
+    } catch (err) {
+      document.getElementById('auth-gate').style.display = 'block';
+      document.getElementById('auth-error').textContent = 'Failed to load metrics: ' + err.message;
+      document.getElementById('auth-error').style.display = 'block';
+    }
+  }
+
+  function renderMetrics(d) {
+    document.getElementById('metrics').style.display = 'block';
+    document.getElementById('as-of').textContent = 'As of ' + new Date(d.as_of).toLocaleString();
+
+    // Users
+    document.getElementById('total-users').textContent = fmt(d.users.total);
+    document.getElementById('signups-week').textContent = fmt(d.users.signups_this_week);
+    document.getElementById('active-week').textContent = fmt(d.users.active_this_week);
+
+    // Assessments
+    document.getElementById('total-assessments').textContent = fmt(d.assessments.total_completed);
+    document.getElementById('assessments-week').textContent = fmt(d.assessments.completed_this_week);
+    document.getElementById('unique-assessed').textContent = fmt(d.assessments.unique_users_completed);
+    document.getElementById('avg-between').textContent = d.assessments.avg_days_between != null ? d.assessments.avg_days_between + 'd' : '—';
+    document.getElementById('completion-rate').textContent = d.assessments.completion_rate_30d_pct + '%';
+
+    // Retention
+    document.getElementById('two-plus').textContent = fmt(d.retention.users_2plus_assessments);
+    document.getElementById('retention-rate').textContent = d.retention.retention_rate_pct + '%';
+    document.getElementById('avg-first-second').textContent = d.retention.avg_days_first_to_second != null ? d.retention.avg_days_first_to_second + 'd' : '—';
+    document.getElementById('returned-30').textContent = fmt(d.retention.returned_within_30_days);
+
+    // Funnel
+    const funnel = d.funnel || {};
+    const steps = [
+      { key: 'page_view_landing', label: 'Landing Page Visited' },
+      { key: 'signup_form_started', label: 'Signup Form Started' },
+      { key: 'signup_completed', label: 'Signup Completed' },
+      { key: 'assessment_started', label: 'First Assessment Started' },
+      { key: 'assessment_completed', label: 'First Assessment Completed' }
+    ];
+    const maxCount = Math.max(...steps.map(s => funnel[s.key] || 0), 1);
+    const tbody = document.getElementById('funnel-body');
+    tbody.innerHTML = '';
+    for (const step of steps) {
+      const count = funnel[step.key] || 0;
+      const pct = Math.round((count / maxCount) * 100);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${step.label}</td>
+        <td>${fmt(count)}</td>
+        <td class="bar-cell">
+          <div class="bar-bg"><div class="bar-fill" style="width:${pct}%"></div></div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    }
+  }
+
+  function fmt(n) {
+    if (n == null) return '—';
+    return Number(n).toLocaleString();
+  }
+</script>
+</body>
+</html>

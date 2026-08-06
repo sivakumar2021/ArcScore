@@ -1,21 +1,427 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shared ArcScore</title>
+<head>
+    __GA_SNIPPET__
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>__SHARE_TITLE__</title>
+    <meta name="description" content="__SHARE_DESCRIPTION__">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="__SHARE_URL__">
+    <meta property="og:title" content="__SHARE_TITLE__">
+    <meta property="og:description" content="__SHARE_DESCRIPTION__">
+    <meta property="og:image" content="https://arcscore-le6r.polsia.app/og-image.svg">
+    <meta property="og:site_name" content="ArcScore">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="__SHARE_TITLE__">
+    <meta name="twitter:description" content="__SHARE_DESCRIPTION__">
+    <meta name="twitter:image" content="https://arcscore-le6r.polsia.app/og-image.svg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-      body { font-family: Inter, system-ui, sans-serif; margin: 0; background: #f8fafc; color: #0f172a; }
-      main { max-width: 760px; margin: 0 auto; padding: 3rem 1.25rem; }
-      .panel { background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --ink: #0a0a0f;
+            --chalk: #fafaf8;
+            --dim: #6b6b78;
+            --accent: #e85d26;
+            --accent-hover: #d14a18;
+            --accent-glow: rgba(232, 93, 38, 0.12);
+            --surface: #f2f1ed;
+            --border: #e0dfd9;
+            --card-bg: #ffffff;
+            --success: #34d399;
+            --error: #ef4444;
+        }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--chalk);
+            color: var(--ink);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+        h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.15; }
+
+        /* NAV */
+        nav {
+            position: sticky; top: 0; width: 100%; z-index: 100;
+            background: rgba(250,250,248,0.92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+        }
+        .nav-inner {
+            max-width: 1120px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 56px;
+        }
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700; font-size: 1.25rem;
+            color: var(--ink); text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+        .logo span { color: var(--accent); }
+
+        /* BUTTONS */
+        .btn {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem; font-weight: 500;
+            padding: 10px 20px; border-radius: 8px;
+            border: none; cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-secondary { background: var(--surface); color: var(--ink); border: 1px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-sm { padding: 7px 14px; font-size: 0.82rem; }
+
+        /* MAIN */
+        main { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+
+        /* SHARE HEADER */
+        .share-hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .share-hero-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--accent-glow);
+            border: 1px solid rgba(232,93,38,0.2);
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 0.78rem; font-weight: 600;
+            color: var(--accent);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        .share-hero h1 {
+            font-size: 2.2rem;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.5rem;
+        }
+        .share-hero p {
+            color: var(--dim);
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+
+        /* SCORE DISPLAY */
+        .overall-score {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .overall-score-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 5rem; font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+            letter-spacing: -0.04em;
+        }
+        .overall-score-label {
+            font-size: 0.88rem;
+            color: var(--dim);
+            margin-top: 0.5rem;
+        }
+
+        /* CHART + BREAKDOWN */
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (max-width: 640px) {
+            .results-grid { grid-template-columns: 1fr; }
+            .share-hero h1 { font-size: 1.6rem; }
+            .overall-score-number { font-size: 3.5rem; }
+        }
+        .chart-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+        .chart-card h3 {
+            font-size: 0.9rem; font-weight: 600;
+            color: var(--dim);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 1rem;
+        }
+        #radar-chart { max-height: 280px; }
+        #bar-chart { max-height: 280px; }
+
+        /* BREAKDOWN */
+        .scores-breakdown {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .scores-breakdown h3 {
+            font-size: 0.9rem; font-weight: 600;
+            color: var(--dim);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 1.25rem;
+        }
+        .score-row {
+            display: grid;
+            grid-template-columns: 2rem 1fr auto auto;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.55rem 0;
+            border-bottom: 1px solid var(--surface);
+        }
+        .score-row:last-child { border-bottom: none; }
+        .score-row-icon { font-size: 1.2rem; text-align: center; }
+        .score-row-name { font-size: 0.88rem; font-weight: 500; }
+        .score-row-bar {
+            width: 120px; height: 6px;
+            background: var(--surface); border-radius: 3px;
+            overflow: hidden;
+        }
+        .score-row-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+        .score-row-value { font-weight: 700; font-size: 0.95rem; min-width: 2rem; text-align: right; }
+
+        /* CTA BANNER */
+        .cta-banner {
+            background: linear-gradient(135deg, #fff8f5 0%, #fef3ee 100%);
+            border: 1.5px solid rgba(232,93,38,0.25);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .cta-banner h2 {
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+        .cta-banner p {
+            color: var(--dim);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+        .cta-banner-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* LOADING + ERROR */
+        .center-msg {
+            text-align: center;
+            padding: 5rem 2rem;
+            color: var(--dim);
+        }
+        .center-msg h2 { margin-bottom: 0.5rem; color: var(--ink); }
+
+        /* SPINNER */
+        .spinner {
+            display: inline-block;
+            width: 18px; height: 18px;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
-  </head>
-  <body>
-    <main>
-      <section class="panel">
-        <h1>Shared ArcScore result</h1>
-        <p>Your shared results page will render here.</p>
-      </section>
-    </main>
-  </body>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="/" class="logo">Arc<span>Score</span></a>
+        <div style="display:flex;gap:10px;">
+            <a href="/signup" class="btn btn-primary btn-sm">Take Your Assessment →</a>
+        </div>
+    </div>
+</nav>
+
+<main id="main">
+    <div class="center-msg" id="loading-state">
+        <span class="spinner" style="border-color:var(--border);border-top-color:var(--accent);width:32px;height:32px;border-width:3px;"></span>
+    </div>
+</main>
+
+<script>
+(async function() {
+    const token = location.pathname.replace('/shared/', '').replace(/\//g, '');
+    const main = document.getElementById('main');
+
+    function scoreColor(score) {
+        if (score >= 8) return '#34d399';
+        if (score >= 6) return '#5b8def';
+        if (score >= 4) return '#e85d26';
+        return '#ef4444';
+    }
+
+    function escapeHtml(str) {
+        const d = document.createElement('div');
+        d.textContent = str;
+        return d.innerHTML;
+    }
+
+    try {
+        const res = await fetch(`/api/shared/${encodeURIComponent(token)}`);
+        if (!res.ok) {
+            if (res.status === 404) {
+                main.innerHTML = `<div class="center-msg"><h2>Results not found</h2><p>This share link may have expired or is invalid.</p><br><a href="/signup" class="btn btn-primary">Create Your ArcScore →</a></div>`;
+            } else {
+                throw new Error('Server error');
+            }
+            return;
+        }
+
+        const data = await res.json();
+        const scores = data.scores || [];
+        const avg = (scores.reduce((s, d) => s + d.score, 0) / scores.length).toFixed(1);
+        const date = new Date(data.completed_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+        const topDim = [...scores].sort((a, b) => b.score - a.score)[0];
+        const lowDim = [...scores].sort((a, b) => a.score - b.score)[0];
+        const sharerFirst = data.sharer_name ? data.sharer_name.split(' ')[0] : null;
+        const shareTitle = sharerFirst
+            ? `${sharerFirst}'s ArcScore: ${avg}/10 — How do you compare?`
+            : `ArcScore: ${avg}/10 — How do you compare?`;
+        const shareDesc = topDim && lowDim
+            ? `Scored ${topDim.name} highest (${topDim.score}) and ${lowDim.name} lowest (${lowDim.score}) across 9 life dimensions.`
+            : 'Track your life across 9 dimensions with ArcScore.';
+
+        // Update OG tags dynamically (won't affect crawlers but helps if user reshares)
+        document.title = shareTitle;
+        document.querySelector('meta[name="description"]').content = shareDesc;
+
+        main.innerHTML = `
+            <div class="share-hero">
+                <div class="share-hero-badge">📊 ArcScore Results</div>
+                <h1>${escapeHtml(sharerFirst ? `${sharerFirst}'s Life Score` : 'Life Score')}</h1>
+                <p>${date}</p>
+            </div>
+
+            <div class="overall-score">
+                <div class="overall-score-number">${avg}</div>
+                <div class="overall-score-label">Overall ArcScore — average across 9 life dimensions</div>
+            </div>
+
+            <div class="results-grid">
+                <div class="chart-card">
+                    <h3>Life Radar</h3>
+                    <canvas id="radar-chart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>Dimension Scores</h3>
+                    <canvas id="bar-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="scores-breakdown">
+                <h3>Breakdown</h3>
+                ${scores.map(s => {
+                    const pct = (s.score / 10) * 100;
+                    const color = scoreColor(s.score);
+                    return `
+                        <div class="score-row">
+                            <div class="score-row-icon">${s.icon}</div>
+                            <div class="score-row-name">${escapeHtml(s.name)}</div>
+                            <div class="score-row-bar">
+                                <div class="score-row-fill" style="width:${pct}%; background:${color}"></div>
+                            </div>
+                            <div class="score-row-value" style="color:${color}">${s.score}</div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+
+            <div class="cta-banner">
+                <h2>How do you compare?</h2>
+                <p>Score yourself across the same 9 life dimensions — fitness, finances, relationships, career, and more. Takes about 2 minutes.</p>
+                <div class="cta-banner-actions">
+                    <a href="/signup" class="btn btn-primary">Take Your Free Assessment →</a>
+                    <a href="/" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+        `;
+
+        // Render radar chart
+        const radarCtx = document.getElementById('radar-chart').getContext('2d');
+        new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: scores.map(s => s.name),
+                datasets: [{
+                    data: scores.map(s => s.score),
+                    backgroundColor: 'rgba(232, 93, 38, 0.12)',
+                    borderColor: '#e85d26',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#e85d26',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        min: 0, max: 10,
+                        ticks: { stepSize: 2, font: { size: 10 }, color: '#6b6b78', backdropColor: 'transparent' },
+                        grid: { color: 'rgba(0,0,0,0.06)' },
+                        pointLabels: { font: { family: 'DM Sans', size: 11 }, color: '#0a0a0f' },
+                        angleLines: { color: 'rgba(0,0,0,0.06)' }
+                    }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Render bar chart
+        const barCtx = document.getElementById('bar-chart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: scores.map(s => s.name),
+                datasets: [{
+                    data: scores.map(s => s.score),
+                    backgroundColor: scores.map(s => scoreColor(s.score) + '99'),
+                    borderColor: scores.map(s => scoreColor(s.score)),
+                    borderWidth: 1.5,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y',
+                scales: {
+                    x: { min: 0, max: 10, ticks: { stepSize: 2, font: { size: 10 }, color: '#6b6b78' }, grid: { color: 'rgba(0,0,0,0.04)' } },
+                    y: { ticks: { font: { family: 'DM Sans', size: 11 }, color: '#0a0a0f' }, grid: { display: false } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+    } catch (err) {
+        main.innerHTML = `<div class="center-msg"><h2>Something went wrong</h2><p>Could not load these results. Please try again.</p></div>`;
+    }
+})();
+</script>
+
+</body>
 </html>

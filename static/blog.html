@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    __GA_SNIPPET__
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArcScore Blog — Life-Tracking Guides & Field Notes</title>
+    <meta name="description" content="Field guides and notes on tracking your life arc: how life events shape score-arc patterns, the meaning of growth phases, decline windows, and recovery curves.">
+    <link rel="canonical" href="https://arcscore-le6r.polsia.app/blog">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://arcscore-le6r.polsia.app/blog">
+    <meta property="og:title" content="ArcScore Blog — Life-Tracking Guides & Field Notes">
+    <meta property="og:description" content="Field guides and notes on tracking your life arc: how life events shape score-arc patterns, and the meaning of growth phases, decline windows, and recovery curves.">
+    <meta property="og:image" content="https://arcscore-le6r.polsia.app/og-image.svg">
+    <meta property="og:site_name" content="ArcScore">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ArcScore Blog — Life-Tracking Guides & Field Notes">
+    <meta name="twitter:description" content="Field guides and notes on tracking your life arc: how life events shape score-arc patterns, and the meaning of growth phases, decline windows, and recovery curves.">
+    <meta name="twitter:image" content="https://arcscore-le6r.polsia.app/og-image.svg">
+
+    <!-- JSON-LD: Blog -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "name": "ArcScore Blog",
+      "description": "Field guides and notes on tracking your life arc: how life events shape score-arc patterns, growth phases, decline windows, and recovery curves.",
+      "url": "https://arcscore-le6r.polsia.app/blog",
+      "publisher": {
+        "@type": "Organization",
+        "name": "ArcScore",
+        "url": "https://arcscore-le6r.polsia.app"
+      }
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0a0a0f;
+            --chalk: #fafaf8;
+            --dim: #6b6b78;
+            --accent: #e85d26;
+            --accent-dark: #c94d1e;
+            --accent-glow: rgba(232, 93, 38, 0.12);
+            --surface: #f2f1ed;
+            --border: #e0dfd9;
+            --card-bg: #ffffff;
+            --success: #2d8a5e;
+            --warning: #c9920a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--chalk);
+            color: var(--ink);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.15; }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* NAV */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            height: 64px;
+            border-bottom: 1px solid var(--border);
+            background: var(--chalk);
+        }
+
+        .nav-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--ink);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-logo:hover { text-decoration: none; }
+        .nav-logo svg { width: 28px; height: 28px; }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--dim);
+            transition: color 0.15s;
+        }
+
+        .nav-links a:hover { color: var(--ink); text-decoration: none; }
+
+        nav .nav-links a.active { color: var(--ink); }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: var(--accent);
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.15s, transform 0.1s;
+        }
+
+        .btn-primary:hover { background: var(--accent-dark); text-decoration: none; }
+        .btn-primary:active { transform: scale(0.98); }
+
+        /* HERO */
+        .hero {
+            padding: 80px 40px 56px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: var(--accent-glow);
+            border: 1px solid rgba(232, 93, 38, 0.2);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--accent-dark);
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 16px;
+            max-width: 720px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--dim);
+            max-width: 620px;
+        }
+
+        /* SECTION */
+        .section {
+            padding: 0 40px 64px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 24px;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+
+        .section-header p {
+            font-size: 0.95rem;
+            color: var(--dim);
+        }
+
+        /* POST CARDS */
+        .post-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .post-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+            display: block;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .post-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            transform: translateY(-1px);
+            border-color: var(--accent);
+            text-decoration: none;
+        }
+
+        .post-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--ink);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .post-card:hover h3 { color: var(--accent); }
+
+        .post-excerpt {
+            font-size: 0.95rem;
+            color: var(--dim);
+            line-height: 1.55;
+            margin-bottom: 16px;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-size: 0.8rem;
+            color: var(--dim);
+        }
+
+        .post-meta .meta-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .meta-dot {
+            width: 3px;
+            height: 3px;
+            background: var(--border);
+            border-radius: 50%;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            background: var(--accent-glow);
+            border: 1px solid rgba(232, 93, 38, 0.2);
+            border-radius: 14px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--accent-dark);
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .tag-chip:hover {
+            background: rgba(232, 93, 38, 0.18);
+            text-decoration: none;
+        }
+
+        .empty-state {
+            padding: 48px 24px;
+            text-align: center;
+            color: var(--dim);
+            font-size: 0.95rem;
+            background: var(--card-bg);
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+        }
+
+        /* CTA BAND */
+        .cta-band {
+            background: var(--ink);
+            color: var(--chalk);
+            padding: 64px 40px;
+            text-align: center;
+        }
+
+        .cta-band h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .cta-band p {
+            color: rgba(250, 250, 248, 0.65);
+            font-size: 1rem;
+            margin-bottom: 32px;
+        }
+
+        .cta-band .btn-primary {
+            background: var(--accent);
+            font-size: 1rem;
+            padding: 14px 28px;
+        }
+
+        .cta-band .btn-primary:hover { background: var(--accent-dark); }
+
+        /* FOOTER */
+        footer {
+            padding: 24px 40px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--dim);
+        }
+
+        footer a { color: var(--dim); }
+        footer a:hover { color: var(--ink); text-decoration: none; }
+
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            .hero { padding: 48px 20px 32px; }
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 0 20px 48px; }
+            footer { flex-direction: column; gap: 8px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="nav-logo">
+            <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="14" cy="14" r="12" stroke="#e85d26" stroke-width="2.5"/>
+                <path d="M8 20 L14 8 L20 20" stroke="#e85d26" stroke-width="2" stroke-linejoin="round" fill="none"/>
+                <path d="M10.5 15 L17.5 15" stroke="#e85d26" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            ArcScore
+        </a>
+        <div class="nav-links">
+            <a href="/dimensions">Dimensions</a>
+            <a href="/pricing">Pricing</a>
+            <a href="/results/gallery">Gallery</a>
+            <a href="/blog" class="active">Blog</a>
+            <a href="/signup" class="btn-primary">Take Assessment</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-eyebrow">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+            The ArcScore Blog
+        </div>
+        <h1>Field guides for tracking your arc</h1>
+        <p>Long-form notes on the patterns that show up on your score arc — what each life event category tends to produce, how growth phases, decline windows, and recovery curves get auto-detected, and where the patterns come from in real life.</p>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <h2>Latest posts</h2>
+            <p>Newest first.</p>
+        </div>
+        <div class="post-list" id="post-list">
+            __POST_LIST__
+        </div>
+        <noscript>
+            <p class="empty-state">Posts are listed server-side. JavaScript is not required to read this page.</p>
+        </noscript>
+    </section>
+
+    <div class="cta-band">
+        <h2>Track your own arc</h2>
+        <p>Free to start. Takes about 2 minutes. Score all 9 life dimensions and see where you stand.</p>
+        <a href="/assess" class="btn-primary">Start Your Assessment →</a>
+    </div>
+
+    <footer>
+        <span>© 2026 ArcScore</span>
+        <div>
+            <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/dimensions">Dimensions</a> · <a href="/pricing">Pricing</a>
+        </div>
+    </footer>
+
+    <script>
+        // Optional insurance: if the server-rendered list is empty (e.g. a
+        // caching glitch on a freshly-published post), re-hydrate from the API.
+        (function () {
+            const list = document.getElementById('post-list');
+            if (!list) return;
+            if (list.querySelector('.post-card')) return;
+            fetch('/api/posts', { headers: { 'Accept': 'application/json' } })
+                .then(function (r) { return r.ok ? r.json() : null; })
+                .then(function (data) {
+                    if (!data || !Array.isArray(data.posts) || data.posts.length === 0) return;
+                    list.innerHTML = data.posts.map(function (p) {
+                        var tags = (p.tags || []).map(function (t) {
+                            return '<a class="tag-chip" href="/blog?tag=' + encodeURIComponent(t) + '">' + t + '</a>';
+                        }).join('');
+                        return '<a class="post-card" href="/blog/' + p.slug + '">' +
+                            '<h3>' + p.title + '</h3>' +
+                            '<p class="post-excerpt">' + p.excerpt + '</p>' +
+                            '<div class="post-meta">' +
+                                '<span class="meta-date">' + new Date(p.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) + '</span>' +
+                            '</div>' +
+                            (tags ? '<div class="tag-list">' + tags + '</div>' : '') +
+                            '</a>';
+                    }).join('');
+                })
+                .catch(function () { /* leave empty-state in place */ });
+        })();
+    </script>
+</body>
+</html>

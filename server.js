@@ -1,6 +1,5 @@
 // server.js — entry point. Wires middleware, mounts routes, starts listener.
 // All business logic lives in routes/ and db/. Keep this file under 300 lines.
-require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -8,6 +7,7 @@ const session = require('express-session');
 const PgSession = require('connect-pg-simple')(session);
 
 const pool = require('./db');
+const { listPublishedPosts, getPostBySlug } = require('./db/posts');
 const authRoutes = require('./routes/auth');
 const assessmentRoutes = require('./routes/assessments');
 const lifeEventsRoutes = require('./routes/life-events');
@@ -23,20 +23,14 @@ const subscriptionRoutes = require('./routes/subscription');
 const subscriptionsRoutes = require('./routes/subscriptions');
 const assessmentInsightsRoutes = require('./routes/assessment-insights');
 const galleryRoutes = require('./routes/gallery');
+const postsRoutes = require('./routes/posts');
 const refLeadsRoutes = require('./routes/ref-leads');
 const leadsRoutes = require('./routes/leads');
 const scoresRoutes = require('./routes/scores');
+const waitlistRoutes = require('./routes/waitlist');
 
 const app = express();
 const port = process.env.PORT || 3000;
-
-function createSessionStore() {
-  if (process.env.DATABASE_URL) {
-    return new PgSession({ pool, createTableIfMissing: true });
-  }
-
-  return new (require('express-session').Store)();
-}
 
 function gaSnippet() {
   const id = process.env.GA_MEASUREMENT_ID;
@@ -61,7 +55,7 @@ app.set('trust proxy', 1);
 
 // Sessions backed by PostgreSQL
 app.use(session({
-  store: createSessionStore(),
+  store: new PgSession({ pool, createTableIfMissing: true }),
   secret: process.env.SESSION_SECRET || 'REDACTED',
   resave: false,
   saveUninitialized: false,
@@ -105,10 +99,12 @@ app.use('/api/stats', statsRoutes);
 app.use('/api/subscription', subscriptionRoutes);
 app.use('/api/subscriptions', subscriptionsRoutes);
 app.use('/api/gallery', galleryRoutes);
+app.use('/api/posts', postsRoutes);
 app.use('/api/ref-leads', refLeadsRoutes);
 app.use('/api/leads', leadsRoutes);
 app.use('/api/assessments', assessmentInsightsRoutes);
 app.use('/api/scores', scoresRoutes);
+app.use('/api/waitlist', waitlistRoutes);
 
 // ─── SEO ───
 
@@ -124,6 +120,7 @@ Allow: /dimensions
 Allow: /shared
 Allow: /results/gallery
 Allow: /timeline
+Allow: /blog
 Disallow: /dashboard
 Disallow: /results/
 Disallow: /life-events
@@ -134,9 +131,27 @@ Sitemap: https://arcscore-le6r.polsia.app/sitemap.xml`
   );
 });
 
-app.get('/sitemap.xml', (req, res) => {
+app.get('/sitemap.xml', async (req, res) => {
   const baseUrl = 'https://arcscore-le6r.polsia.app';
   const today = new Date().toISOString().split('T')[0];
+
+  let postEntries = '';
+  try {
+    const result = await pool.query(
+      `SELECT slug, updated_at
+       FROM posts
+       WHERE is_published = TRUE
+       ORDER BY published_at DESC`
+    );
+    postEntries = result.rows.map(r => {
+      const safeSlug = String(r.slug || '').replace(/[^a-z0-9-]/gi, '');
+      const lastmod = new Date(r.updated_at).toISOString().split('T')[0];
+      return `  <url><loc>${baseUrl}/blog/${safeSlug}</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>`;
+    }).join('\n');
+  } catch (_) {
+    // Non-fatal: fall back to static sitemap without blog posts
+  }
+
   res.type('application/xml').send(
 `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -147,6 +162,8 @@ app.get('/sitemap.xml', (req, res) => {
   <url><loc>${baseUrl}/dimensions</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>${baseUrl}/login</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>
   <url><loc>${baseUrl}/results/gallery</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>${baseUrl}/blog</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+${postEntries}
 </urlset>`
   );
 });
@@ -211,6 +228,145 @@ app.get('/results/gallery', serveAppWithMeta({
   ogTitle: 'ArcScore Gallery — See What the Average Arc Looks Like',
   ogDesc: 'Anonymized data across thousands of assessments. Dimension averages, common life events, and where growth happens most.'
 }, '/results/gallery'));
+
+// Blog index — server-rendered card list (no client fetch needed for SEO).
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function formatPostDate(value) {
+  if (!value) return '';
+  const d = value instanceof Date ? value : new Date(value);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function buildPostListHtml(rows) {
+  if (!rows || rows.length === 0) {
+    return '<p class="empty-state">No posts yet — check back soon.</p>';
+  }
+  return rows.map(r => {
+    const slug = String(r.slug || '');
+    const title = escapeHtml(r.title);
+    const excerpt = escapeHtml(r.excerpt);
+    const dateLabel = escapeHtml(formatPostDate(r.published_at));
+    const tags = Array.isArray(r.tags) ? r.tags : [];
+    const tagHtml = tags.map(t => {
+      const safe = String(t || '').trim();
+      return `<a class="tag-chip" href="/blog?tag=${encodeURIComponent(safe)}">${escapeHtml(safe)}</a>`;
+    }).join('');
+    return `<a class="post-card" href="/blog/${encodeURIComponent(slug)}">
+        <h3>${title}</h3>
+        <p class="post-excerpt">${excerpt}</p>
+        <div class="post-meta">
+          <span class="meta-date">${dateLabel}</span>
+        </div>
+        ${tagHtml ? `<div class="tag-list">${tagHtml}</div>` : ''}
+      </a>`;
+  }).join('\n');
+}
+
+app.get('/blog', async (req, res) => {
+  const htmlPath = path.join(__dirname, 'static', 'blog.html');
+  let html = fs.readFileSync(htmlPath, 'utf8');
+
+  let postListHtml;
+  try {
+    const rows = await listPublishedPosts();
+    postListHtml = buildPostListHtml(rows);
+  } catch (err) {
+    console.error('Blog index error:', err.message || err);
+    postListHtml = '<p class="empty-state">Posts are temporarily unavailable.</p>';
+  }
+
+  html = html
+    .replace('__POST_LIST__', postListHtml)
+    .replace('__GA_SNIPPET__', gaSnippet());
+
+  res.type('html').send(html);
+});
+
+// Blog post detail — SEO-targeted meta + JSON-LD per post.
+function buildPostNotFoundHtml() {
+  return `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Post not found — ArcScore</title>
+<meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="font-family: 'DM Sans', sans-serif; background: #fafaf8; color: #0a0a0f; padding: 64px 24px; text-align: center;">
+<h1 style="font-family: 'Space Grotesk', sans-serif;">Post not found</h1>
+<p>The post you are looking for does not exist or has been unpublished.</p>
+<p><a style="color: #e85d26;" href="/blog">← Back to all posts</a></p>
+</body></html>`;
+}
+
+app.get('/blog/:slug', async (req, res) => {
+  const rawSlug = req.params.slug || '';
+  if (rawSlug.length > 200 || !/^[\x20-\x7E]+$/.test(rawSlug)) {
+    return res.status(404).type('html').send(buildPostNotFoundHtml());
+  }
+
+  let post;
+  try {
+    post = await getPostBySlug(rawSlug);
+  } catch (err) {
+    console.error('Blog detail error:', err.message || err);
+    return res.status(500).type('html').send(buildPostNotFoundHtml());
+  }
+  if (!post) return res.status(404).type('html').send(buildPostNotFoundHtml());
+
+  const baseUrl = 'https://arcscore-le6r.polsia.app';
+  const pagePath = `/blog/${post.slug}`;
+  const ogImage = post.cover_image_url || `${baseUrl}/og-image.svg`;
+  const tags = Array.isArray(post.tags) ? post.tags : [];
+  const tagsHtml = tags.map(t => {
+    const safe = String(t || '').trim();
+    return `<a class="tag-chip" href="/blog?tag=${encodeURIComponent(safe)}">${escapeHtml(safe)}</a>`;
+  }).join('');
+
+  const publishedIso = post.published_at instanceof Date
+    ? post.published_at.toISOString()
+    : new Date(post.published_at).toISOString();
+  const updatedIso = post.updated_at instanceof Date
+    ? post.updated_at.toISOString()
+    : new Date(post.updated_at).toISOString();
+
+  const jsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt,
+    url: `${baseUrl}${pagePath}`,
+    datePublished: publishedIso,
+    dateModified: updatedIso,
+    author: { '@type': 'Organization', name: post.author_name || 'ArcScore' },
+    publisher: { '@type': 'Organization', name: 'ArcScore' },
+    image: ogImage,
+    keywords: tags.join(', ')
+  });
+
+  const htmlPath = path.join(__dirname, 'static', 'blog-post.html');
+  let html = fs.readFileSync(htmlPath, 'utf8');
+  html = html
+    .replace(/__PAGE_TITLE__/g, escapeHtml(`${post.title}`))
+    .replace(/__PAGE_DESCRIPTION__/g, escapeHtml(post.excerpt || ''))
+    .replace(/__PAGE_ROBOTS__/g, 'index, follow')
+    .replace(/__PAGE_PATH__/g, pagePath)
+    .replace(/__OG_TITLE__/g, escapeHtml(post.title || ''))
+    .replace(/__OG_DESCRIPTION__/g, escapeHtml(post.excerpt || ''))
+    .replace(/__OG_IMAGE__/g, ogImage)
+    .replace('__JSON_LD__', jsonLd)
+    .replace('__POST_TITLE__', escapeHtml(post.title || ''))
+    .replace('__POST_DATE__', escapeHtml(formatPostDate(post.published_at)))
+    .replace('__POST_TAGS__', tagsHtml)
+    .replace('__POST_BODY__', String(post.body || ''))
+    .replace('__GA_SNIPPET__', gaSnippet());
+
+  res.type('html').send(html);
+});
 
 app.get('/results/:id', (req, res) => {
   const htmlPath = path.join(__dirname, 'static', 'app.html');

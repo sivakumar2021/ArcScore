@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    __GA_SNIPPET__
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>__PAGE_TITLE__</title>
+    <meta name="description" content="__PAGE_DESCRIPTION__">
+    <link rel="canonical" href="https://arcscore-le6r.polsia.app__PAGE_PATH__">
+    <meta name="robots" content="__PAGE_ROBOTS__">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://arcscore-le6r.polsia.app__PAGE_PATH__">
+    <meta property="og:title" content="__OG_TITLE__">
+    <meta property="og:description" content="__OG_DESCRIPTION__">
+    <meta property="og:image" content="__OG_IMAGE__">
+    <meta property="og:site_name" content="ArcScore">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="__OG_TITLE__">
+    <meta name="twitter:description" content="__OG_DESCRIPTION__">
+    <meta name="twitter:image" content="__OG_IMAGE__">
+
+    <!-- JSON-LD: BlogPosting -->
+    <script type="application/ld+json">
+    __JSON_LD__
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0a0a0f;
+            --chalk: #fafaf8;
+            --dim: #6b6b78;
+            --accent: #e85d26;
+            --accent-dark: #c94d1e;
+            --accent-glow: rgba(232, 93, 38, 0.12);
+            --surface: #f2f1ed;
+            --border: #e0dfd9;
+            --card-bg: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--chalk);
+            color: var(--ink);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.2; }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* NAV */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            height: 64px;
+            border-bottom: 1px solid var(--border);
+            background: var(--chalk);
+        }
+
+        .nav-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--ink);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-logo:hover { text-decoration: none; }
+        .nav-logo svg { width: 28px; height: 28px; }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--dim);
+            transition: color 0.15s;
+        }
+
+        .nav-links a:hover { color: var(--ink); text-decoration: none; }
+
+        nav .nav-links a.active { color: var(--ink); }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: var(--accent);
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.15s, transform 0.1s;
+        }
+
+        .btn-primary:hover { background: var(--accent-dark); text-decoration: none; }
+        .btn-primary:active { transform: scale(0.98); }
+
+        /* ARTICLE */
+        .article-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 56px 40px 64px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--dim);
+            margin-bottom: 32px;
+        }
+        .back-link:hover { color: var(--accent); text-decoration: none; }
+
+        .article-header { margin-bottom: 32px; }
+
+        .article-header h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 16px;
+            line-height: 1.15;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--dim);
+            margin-bottom: 8px;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .tag-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            background: var(--accent-glow);
+            border: 1px solid rgba(232, 93, 38, 0.2);
+            border-radius: 14px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--accent-dark);
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .tag-chip:hover {
+            background: rgba(232, 93, 38, 0.18);
+            text-decoration: none;
+        }
+
+        /* POST BODY (prose) */
+        .post-body { font-size: 1.05rem; line-height: 1.7; color: var(--ink); }
+
+        .post-body p { margin-bottom: 20px; }
+        .post-body p:first-of-type::first-letter {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 700;
+            float: left;
+            line-height: 0.9;
+            margin-right: 10px;
+            margin-top: 4px;
+            color: var(--accent);
+        }
+
+        .post-body h2 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            color: var(--ink);
+        }
+
+        .post-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 28px;
+            margin-bottom: 10px;
+            color: var(--ink);
+        }
+
+        .post-body strong { color: var(--ink); font-weight: 600; }
+        .post-body code {
+            font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 0.92em;
+            background: var(--surface);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--accent-dark);
+        }
+
+        .post-body a { color: var(--accent); }
+        .post-body a:hover { text-decoration: underline; }
+
+        /* ARTICLE CTA */
+        .article-cta {
+            margin-top: 56px;
+            padding: 40px 32px;
+            background: var(--ink);
+            color: var(--chalk);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .article-cta h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--chalk);
+        }
+
+        .article-cta p {
+            color: rgba(250, 250, 248, 0.65);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+
+        .article-cta .btn-primary {
+            background: var(--accent);
+            font-size: 0.95rem;
+            padding: 12px 24px;
+        }
+
+        .article-cta .btn-primary:hover { background: var(--accent-dark); }
+
+        /* FOOTER */
+        footer {
+            padding: 24px 40px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--dim);
+        }
+
+        footer a { color: var(--dim); }
+        footer a:hover { color: var(--ink); text-decoration: none; }
+
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            .article-container { padding: 32px 20px 48px; }
+            .article-header h1 { font-size: 1.85rem; }
+            .post-body { font-size: 1rem; }
+            footer { flex-direction: column; gap: 8px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="nav-logo">
+            <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="14" cy="14" r="12" stroke="#e85d26" stroke-width="2.5"/>
+                <path d="M8 20 L14 8 L20 20" stroke="#e85d26" stroke-width="2" stroke-linejoin="round" fill="none"/>
+                <path d="M10.5 15 L17.5 15" stroke="#e85d26" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            ArcScore
+        </a>
+        <div class="nav-links">
+            <a href="/dimensions">Dimensions</a>
+            <a href="/pricing">Pricing</a>
+            <a href="/results/gallery">Gallery</a>
+            <a href="/blog" class="active">Blog</a>
+            <a href="/signup" class="btn-primary">Take Assessment</a>
+        </div>
+    </nav>
+
+    <article class="article-container">
+        <a class="back-link" href="/blog">← All posts</a>
+        <header class="article-header">
+            <h1>__POST_TITLE__</h1>
+            <div class="article-meta">
+                <span class="meta-date">__POST_DATE__</span>
+            </div>
+            <div class="tag-list">
+                __POST_TAGS__
+            </div>
+        </header>
+        <div class="post-body">
+            __POST_BODY__
+        </div>
+
+        <div class="article-cta">
+            <h2>Track your own arc</h2>
+            <p>Free to start. Takes about 2 minutes.</p>
+            <a href="/assess" class="btn-primary">Start Your Assessment →</a>
+        </div>
+    </article>
+
+    <footer>
+        <span>© 2026 ArcScore</span>
+        <div>
+            <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/dimensions">Dimensions</a> · <a href="/pricing">Pricing</a>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArcScore — Leads Inbox</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0f11;
+      --surface: #18181c;
+      --border: #2a2a33;
+      --text: #e8e8ec;
+      --muted: #888896;
+      --accent: #6d66ff;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #f59e0b;
+      --blue: #38bdf8;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
+    header .badge {
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-left: 0.5rem;
+    }
+    header .nav {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    header .nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    header .nav a:hover { color: var(--text); border-color: var(--accent); }
+    .refresh-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: border-color 0.2s;
+    }
+    .refresh-btn:hover { border-color: var(--accent); }
+
+    /* Auth gate */
+    #auth-gate {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 400px;
+      margin: 4rem auto;
+    }
+    #auth-gate h2 { font-size: 1.1rem; margin-bottom: 1.5rem; }
+    #auth-gate input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      outline: none;
+    }
+    #auth-gate input:focus { border-color: var(--accent); }
+    #auth-gate button {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #auth-error { color: var(--red); font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+
+    /* Filters */
+    #inbox { display: none; }
+    .filters {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .filters label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      font-weight: 600;
+      margin-right: 0.4rem;
+    }
+    .filters select {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.4rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      outline: none;
+      cursor: pointer;
+    }
+    .filters select:focus { border-color: var(--accent); }
+    .filters .count {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    /* Inbox table */
+    .inbox-table {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+      vertical-align: top;
+    }
+    th {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: rgba(0,0,0,0.15);
+    }
+    tr:last-child td { border-bottom: none; }
+    .lead-cell .email { font-weight: 500; }
+    .lead-cell .ref { color: var(--muted); font-size: 0.75rem; display: block; margin-top: 0.2rem; }
+    .preview-cell {
+      color: var(--muted);
+      font-size: 0.82rem;
+      max-width: 320px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .sentiment-badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: capitalize;
+    }
+    .sentiment-badge.positive { background: rgba(34,197,94,0.15); color: var(--green); }
+    .sentiment-badge.negative { background: rgba(239,68,68,0.15); color: var(--red); }
+    .sentiment-badge.neutral  { background: rgba(136,136,150,0.15); color: var(--muted); }
+    .sentiment-badge.mixed    { background: rgba(245,158,11,0.15); color: var(--yellow); }
+    .sentiment-badge.interested { background: rgba(56,189,248,0.15); color: var(--blue); }
+    .received-cell { color: var(--muted); font-size: 0.78rem; white-space: nowrap; }
+    .status-cell select {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.3rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      outline: none;
+      cursor: pointer;
+    }
+    .status-cell select.updating { opacity: 0.5; }
+    .status-error {
+      color: var(--red);
+      font-size: 0.85rem;
+      padding: 0.75rem 1rem;
+      background: rgba(239,68,68,0.08);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .pagination {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0.75rem 0;
+      margin-top: 0.5rem;
+    }
+    .pagination button {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .pagination .page-info { color: var(--muted); font-size: 0.8rem; }
+    .empty-state {
+      color: var(--muted);
+      text-align: center;
+      padding: 3rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <h1>Leads Inbox <span class="badge">Admin</span></h1>
+    </div>
+    <div class="nav">
+      <a href="/admin/metrics">Metrics</a>
+      <button class="refresh-btn" onclick="loadInbox()">↻ Refresh</button>
+    </div>
+  </header>
+
+  <!-- Auth gate -->
+  <div id="auth-gate">
+    <h2>Admin Access</h2>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem;">Enter the admin secret to view the inbox.</p>
+    <input type="password" id="secret-input" placeholder="Admin secret" autocomplete="off">
+    <button onclick="tryAuth()">View Inbox</button>
+    <div id="auth-error">Incorrect secret — check ADMIN_SECRET env var.</div>
+  </div>
+
+  <!-- Inbox -->
+  <div id="inbox">
+    <div class="status-error" id="status-error"></div>
+
+    <div class="filters">
+      <label for="source-filter">Source</label>
+      <select id="source-filter"><option value="">All</option></select>
+      <label for="stage-filter">Stage</label>
+      <select id="stage-filter">
+        <option value="">All</option>
+        <option value="new">new</option>
+        <option value="replied">replied</option>
+        <option value="archived">archived</option>
+        <option value="pipeline-start">pipeline-start</option>
+      </select>
+      <span class="count" id="count"></span>
+    </div>
+
+    <div id="inbox-body"></div>
+
+    <div class="pagination" id="pagination" style="display:none;">
+      <button id="prev-btn">← Prev</button>
+      <span class="page-info" id="page-info"></span>
+      <button id="next-btn">Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const STAGES = ['new', 'replied', 'archived', 'pipeline-start'];
+  let adminSecret = sessionStorage.getItem('arcscore_admin_secret') || '';
+  let activeSources = [''];
+  let currentOffset = 0;
+  const LIMIT = 100;
+
+  window.addEventListener('DOMContentLoaded', () => {
+    if (adminSecret) {
+      loadInbox();
+    }
+    document.getElementById('secret-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') tryAuth();
+    });
+    document.getElementById('source-filter').addEventListener('change', () => {
+      currentOffset = 0;
+      loadInbox();
+    });
+    document.getElementById('stage-filter').addEventListener('change', () => {
+      currentOffset = 0;
+      loadInbox();
+    });
+    document.getElementById('prev-btn').addEventListener('click', () => {
+      if (currentOffset >= LIMIT) {
+        currentOffset -= LIMIT;
+        loadInbox();
+      }
+    });
+    document.getElementById('next-btn').addEventListener('click', () => {
+      currentOffset += LIMIT;
+      loadInbox();
+    });
+  });
+
+  function tryAuth() {
+    const val = document.getElementById('secret-input').value.trim();
+    if (!val) return;
+    adminSecret = val;
+    sessionStorage.setItem('arcscore_admin_secret', val);
+    loadInbox();
+  }
+
+  function showAuthError(msg) {
+    document.getElementById('auth-error').textContent = msg || 'Incorrect secret — check ADMIN_SECRET env var.';
+    document.getElementById('auth-error').style.display = 'block';
+    document.getElementById('auth-gate').style.display = 'block';
+    document.getElementById('inbox').style.display = 'none';
+  }
+
+  async function authedFetch(path, init = {}) {
+    return fetch(path, {
+      ...init,
+      headers: {
+        ...(init.headers || {}),
+        'X-Admin-Secret': adminSecret
+      },
+      credentials: 'include'
+    });
+  }
+
+  async function loadInbox() {
+    document.getElementById('auth-gate').style.display = 'none';
+    document.getElementById('inbox').style.display = 'none';
+    document.getElementById('status-error').style.display = 'none';
+
+    const source = document.getElementById('source-filter').value;
+    const stage = document.getElementById('stage-filter').value;
+    const params = new URLSearchParams();
+    if (source) params.set('source', source);
+    if (stage) params.set('stage', stage);
+    if (currentOffset) params.set('offset', currentOffset);
+    const qs = params.toString();
+
+    try {
+      const res = await authedFetch(`/api/admin/leads/inbox${qs ? '?' + qs : ''}`);
+
+      if (res.status === 403 || res.status === 401) {
+        sessionStorage.removeItem('arcscore_admin_secret');
+        adminSecret = '';
+        showAuthError();
+        return;
+      }
+
+      if (!res.ok) {
+        const text = await res.text();
+        showStatusError(`Failed to load inbox (${res.status}): ${text}`);
+        document.getElementById('inbox').style.display = 'block';
+        return;
+      }
+
+      const data = await res.json();
+      // Refresh source dropdown only on the unfiltered load — otherwise we'd
+      // overwrite the active selection and possibly with values that wouldn't
+      // even match the current filter.
+      if (!source) {
+        activeSources = data.sources || [];
+        populateSourceFilter(activeSources);
+      }
+      renderInbox(data);
+    } catch (err) {
+      showStatusError('Failed to load inbox: ' + err.message);
+      document.getElementById('inbox').style.display = 'block';
+    }
+  }
+
+  function populateSourceFilter(sources) {
+    const sel = document.getElementById('source-filter');
+    const current = sel.value;
+    sel.innerHTML = '<option value="">All</option>';
+    for (const s of sources) {
+      const opt = document.createElement('option');
+      opt.value = s;
+      opt.textContent = s;
+      sel.appendChild(opt);
+    }
+    // Restore selection if still valid
+    if (current && sources.includes(current)) sel.value = current;
+  }
+
+  function showStatusError(msg) {
+    const el = document.getElementById('status-error');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  function renderInbox(data) {
+    document.getElementById('inbox').style.display = 'block';
+    const replies = data.replies || [];
+    document.getElementById('count').textContent = `${replies.length} ${replies.length === 1 ? 'reply' : 'replies'}`;
+
+    const body = document.getElementById('inbox-body');
+    if (replies.length === 0) {
+      body.innerHTML = '<div class="empty-state">No replies yet — POSTs to <code>/api/leads/inbound</code> will appear here.</div>';
+      document.getElementById('pagination').style.display = 'none';
+      return;
+    }
+
+    const rows = replies.map(r => rowHtml(r)).join('');
+    body.innerHTML = `
+      <div class="inbox-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Lead</th>
+              <th>Subject</th>
+              <th>Preview</th>
+              <th>Sentiment</th>
+              <th>Source</th>
+              <th>Received</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    `;
+
+    // Wire per-row status <select>
+    body.querySelectorAll('select.status-select').forEach(sel => {
+      sel.addEventListener('change', onStatusChange);
+    });
+
+    // Pagination — only render if we hit the cap (means "maybe more") or if
+    // we're past the first page.
+    const cap = replies.length === LIMIT;
+    const showPagination = cap || currentOffset > 0;
+    const pagination = document.getElementById('pagination');
+    pagination.style.display = showPagination ? 'flex' : 'none';
+    document.getElementById('prev-btn').disabled = currentOffset === 0;
+    document.getElementById('next-btn').disabled = !cap;
+    const start = currentOffset + 1;
+    const end = currentOffset + replies.length;
+    document.getElementById('page-info').textContent = cap
+      ? `${start}–${end} (showing ${LIMIT})`
+      : `${start}–${end}`;
+  }
+
+  function rowHtml(r) {
+    const lead = escapeHtml(r.lead_email || '');
+    const ref = r.ref_code ? escapeHtml(r.ref_code) : '';
+    const subject = escapeHtml(r.subject || '—');
+    const preview = escapeHtml(r.body_preview || r.subject || '');
+    const sentiment = r.sentiment ? escapeHtml(r.sentiment) : '';
+    const sentimentBadge = sentiment
+      ? `<span class="sentiment-badge ${sentimentClass(sentiment)}">${sentiment}</span>`
+      : '<span style="color:var(--muted)">—</span>';
+    const source = escapeHtml(r.source || '');
+    const received = r.received_at ? formatRelative(r.received_at) : '—';
+    const statusOpts = STAGES.map(s =>
+      `<option value="${s}"${s === r.status ? ' selected' : ''}>${s}</option>`
+    ).join('');
+    return `
+      <tr data-id="${r.id}">
+        <td class="lead-cell">
+          <span class="email">${lead}</span>
+          ${ref ? `<span class="ref">↳ ${ref}</span>` : ''}
+        </td>
+        <td>${subject}</td>
+        <td class="preview-cell" title="${escapeAttr(preview)}">${preview}</td>
+        <td>${sentimentBadge}</td>
+        <td>${source}</td>
+        <td class="received-cell">${received}</td>
+        <td class="status-cell">
+          <select class="status-select" data-id="${r.id}" data-prev="${escapeAttr(r.status)}">${statusOpts}</select>
+        </td>
+      </tr>
+    `;
+  }
+
+  function sentimentClass(s) {
+    const v = String(s).toLowerCase();
+    if (/pos|hot|interested|warm|yes|good|great/.test(v)) return 'positive';
+    if (/neg|no|cold|unsubscribe|spam|bad|angry/.test(v)) return 'negative';
+    if (/mix|curious|neutral|fyi/.test(v)) return 'mixed';
+    if (/info|question/.test(v)) return 'interested';
+    return 'neutral';
+  }
+
+  async function onStatusChange(e) {
+    const sel = e.target;
+    const id = sel.dataset.id;
+    const prev = sel.dataset.prev;
+    const next = sel.value;
+    if (next === prev) return;
+    sel.classList.add('updating');
+    document.getElementById('status-error').style.display = 'none';
+
+    try {
+      const res = await authedFetch(`/api/admin/leads/inbox/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: next })
+      });
+      if (res.ok) {
+        sel.dataset.prev = next;
+      } else {
+        const text = await res.text();
+        sel.value = prev;
+        showStatusError(`Status change failed (${res.status}): ${text}`);
+      }
+    } catch (err) {
+      sel.value = prev;
+      showStatusError('Status change failed: ' + err.message);
+    } finally {
+      sel.classList.remove('updating');
+    }
+  }
+
+  function escapeHtml(s) {
+    const str = s == null ? '' : String(s);
+    return str.replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+  function escapeAttr(s) { return escapeHtml(s); }
+
+  function formatRelative(iso) {
+    if (!iso) return '—';
+    const then = new Date(iso);
+    const now = Date.now();
+    const diff = (now - then.getTime()) / 1000;
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+    if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+    if (diff < 86400 * 7) return Math.floor(diff / 86400) + 'd ago';
+    return then.toISOString().split('T')[0];
+  }
+</script>
+</body>
+</html>

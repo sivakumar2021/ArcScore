@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0a0a0f"/>
+  <!-- Background accent glow -->
+  <ellipse cx="850" cy="315" rx="400" ry="300" fill="rgba(232,93,38,0.08)"/>
+  <!-- Left bar chart visual -->
+  <rect x="80" y="120" width="24" height="280" rx="4" fill="#e85d26" opacity="0.9"/>
+  <rect x="130" y="180" width="24" height="220" rx="4" fill="#5b8def" opacity="0.9"/>
+  <rect x="180" y="150" width="24" height="250" rx="4" fill="#c084fc" opacity="0.9"/>
+  <rect x="230" y="220" width="24" height="180" rx="4" fill="#34d399" opacity="0.9"/>
+
+  <!-- Baseline -->
+  <line x1="60" y1="400" x2="300" y2="400" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+
+  <!-- Arc line (the "arc" in ArcScore) -->
+  <path d="M 60 380 Q 150 280 240 340 Q 330 400 420 320" stroke="rgba(232,93,38,0.6)" stroke-width="2.5" fill="none"/>
+
+  <!-- Right side: title block -->
+  <text x="500" y="220" font-family="system-ui, sans-serif" font-weight="700" font-size="72" fill="#ffffff">ArcScore</text>
+
+  <!-- Tagline -->
+  <text x="500" y="290" font-family="system-ui, sans-serif" font-weight="400" font-size="32" fill="#9999a8">Track 9 Life Dimensions</text>
+
+  <!-- Accent line under title -->
+  <rect x="500" y="310" width="120" height="4" rx="2" fill="#e85d26"/>
+
+  <!-- Dimensions row -->
+  <text x="500" y="375" font-family="system-ui, sans-serif" font-size="22" fill="#6b6b78">fitness · financial · relationships · career</text>
+  <text x="500" y="410" font-family="system-ui, sans-serif" font-size="22" fill="#6b6b78">mental health · learning · social · habits · purpose</text>
+
+  <!-- Bottom bar -->
+  <rect x="0" y="590" width="1200" height="40" fill="rgba(232,93,38,0.15)"/>
+  <text x="600" y="618" font-family="system-ui, sans-serif" font-size="18" fill="rgba(232,93,38,0.8)" text-anchor="middle">arcscore.app — Free Assessment</text>
+</svg>

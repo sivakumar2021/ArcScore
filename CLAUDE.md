@@ -7,7 +7,7 @@ ArcScore is a personal life assessment tool. Users score themselves across 9 lif
 Express.js + Node.js backend, vanilla JS SPA frontend (app.html), PostgreSQL (Neon), Render hosting, bcrypt + pg-session auth.
 
 ## Directory Map
-- `static/` — static frontend: index.html (landing), app.html (SPA shell), pricing.html, shared.html, gallery.html (public aggregate gallery), admin-metrics.html. Named `static/` not `public/` — Railway's Railpack build treats a folder literally named `public` as a static-site signal and diverts it away from the app's own deploy image.
+- `static/` — static frontend: index.html (landing), app.html (SPA shell), pricing.html, shared.html, gallery.html (public aggregate gallery), admin-metrics.html, blog.html, blog-post.html. Named `static/` not `public/` in this Railway-deployed copy — Railway's Railpack build treats a folder literally named `public` as a static-site signal and diverts it away from the app's own deploy image.
 - `routes/` — Express route modules (auth, assessments, life-events, insights, assessment-insights, re-engagement, analytics, admin, cron, share, subscription, gallery)
 - `services/` — shared service utilities (email.js — Polsia email proxy wrapper + HTML templates for welcome, reminder, drip steps 0/1/2)
 - `db/` — database query functions by entity (assessments, subscriptions, gallery)

@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    __GA_SNIPPET__
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArcScore Gallery — What Does the Average Arc Look Like?</title>
+    <meta name="description" content="Explore anonymized aggregate ArcScore data across 9 life dimensions. See how people score, what events shape their arcs, and where growth happens most.">
+    <link rel="canonical" href="https://arcscore-le6r.polsia.app/results/gallery">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://arcscore-le6r.polsia.app/results/gallery">
+    <meta property="og:title" content="ArcScore Gallery — See What the Average Arc Looks Like">
+    <meta property="og:description" content="Anonymized data across thousands of assessments. Dimension averages, common life events, and where growth happens most.">
+    <meta property="og:image" content="https://arcscore-le6r.polsia.app/og-image.svg">
+    <meta property="og:site_name" content="ArcScore">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ArcScore Gallery — See What the Average Arc Looks Like">
+    <meta name="twitter:description" content="Anonymized data across thousands of assessments. Dimension averages, common life events, and where growth happens most.">
+    <meta name="twitter:image" content="https://arcscore-le6r.polsia.app/og-image.svg">
+
+    <!-- JSON-LD: Product -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "ArcScore Gallery",
+      "description": "Anonymized aggregate ArcScore data showing dimension averages, common life events, and growth patterns across thousands of assessments.",
+      "url": "https://arcscore-le6r.polsia.app/results/gallery",
+      "brand": {
+        "@type": "Brand",
+        "name": "ArcScore"
+      },
+      "category": "LifestyleApplication"
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0a0a0f;
+            --chalk: #fafaf8;
+            --dim: #6b6b78;
+            --accent: #e85d26;
+            --accent-dark: #c94d1e;
+            --accent-glow: rgba(232, 93, 38, 0.12);
+            --surface: #f2f1ed;
+            --border: #e0dfd9;
+            --card-bg: #ffffff;
+            --success: #2d8a5e;
+            --warning: #c9920a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--chalk);
+            color: var(--ink);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.15; }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* NAV */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            height: 64px;
+            border-bottom: 1px solid var(--border);
+            background: var(--chalk);
+        }
+
+        .nav-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--ink);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-logo:hover { text-decoration: none; }
+
+        .nav-logo svg { width: 28px; height: 28px; }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--dim);
+            transition: color 0.15s;
+        }
+
+        .nav-links a:hover { color: var(--ink); text-decoration: none; }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: var(--accent);
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.15s, transform 0.1s;
+        }
+
+        .btn-primary:hover { background: var(--accent-dark); text-decoration: none; }
+        .btn-primary:active { transform: scale(0.98); }
+
+        /* HERO */
+        .hero {
+            padding: 80px 40px 64px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: var(--accent-glow);
+            border: 1px solid rgba(232, 93, 38, 0.2);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--accent-dark);
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 16px;
+            max-width: 640px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--dim);
+            max-width: 560px;
+            margin-bottom: 40px;
+        }
+
+        .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: var(--card-bg);
+            color: var(--ink);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            border: 1.5px solid var(--border);
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--ink);
+            text-decoration: none;
+        }
+
+        /* STAT BAR */
+        .stat-bar {
+            display: flex;
+            gap: 0;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 64px;
+            background: var(--card-bg);
+        }
+
+        .stat-item {
+            flex: 1;
+            padding: 24px 32px;
+            border-right: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .stat-item:last-child { border-right: none; }
+
+        .stat-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--dim);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        /* SECTION */
+        .section {
+            padding: 0 40px 64px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 32px;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+
+        .section-header p {
+            font-size: 0.95rem;
+            color: var(--dim);
+        }
+
+        /* DIMENSION CARDS */
+        .dimension-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .dim-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .dim-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            transform: translateY(-1px);
+        }
+
+        .dim-card-top {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .dim-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .dim-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--ink);
+        }
+
+        .dim-score {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 12px;
+            line-height: 1;
+        }
+
+        .dim-score span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--dim);
+        }
+
+        .bar-track {
+            height: 6px;
+            background: var(--surface);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px;
+            transition: width 0.6s ease;
+        }
+
+        .bar-fill.low { background: #d4573b; }
+        .bar-fill.medium { background: var(--warning); }
+        .bar-fill.high { background: #3a8fb7; }
+        .bar-fill.excellent { background: var(--success); }
+
+        .dim-meta {
+            font-size: 0.75rem;
+            color: var(--dim);
+        }
+
+        /* GROWTH PHASES */
+        .phase-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .phase-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phase-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .phase-tier {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent-glow);
+            margin: 0 auto 12px;
+        }
+
+        .phase-tier svg { width: 20px; height: 20px; color: var(--accent); }
+
+        .phase-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+
+        .phase-count {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+
+        .phase-label {
+            font-size: 0.75rem;
+            color: var(--dim);
+        }
+
+        .phase-bar-track {
+            height: 4px;
+            background: var(--surface);
+            border-radius: 4px;
+            margin-top: 16px;
+            overflow: hidden;
+        }
+
+        .phase-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        /* LIFE EVENTS */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .event-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .event-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .event-body { flex: 1; min-width: 0; }
+
+        .event-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+
+        .event-dims {
+            font-size: 0.8rem;
+            color: var(--dim);
+            margin-bottom: 6px;
+        }
+
+        .event-count-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            background: var(--accent-glow);
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--accent-dark);
+        }
+
+        /* CTA BAND */
+        .cta-band {
+            background: var(--ink);
+            color: var(--chalk);
+            padding: 64px 40px;
+            text-align: center;
+        }
+
+        .cta-band h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .cta-band p {
+            color: rgba(250, 250, 248, 0.65);
+            font-size: 1rem;
+            margin-bottom: 32px;
+        }
+
+        .cta-band .btn-primary {
+            background: var(--accent);
+            font-size: 1rem;
+            padding: 14px 28px;
+        }
+
+        .cta-band .btn-primary:hover { background: var(--accent-dark); }
+
+        /* LOADING */
+        .loading-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px;
+            color: var(--dim);
+            font-size: 0.95rem;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* FOOTER */
+        footer {
+            padding: 24px 40px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--dim);
+        }
+
+        footer a { color: var(--dim); }
+        footer a:hover { color: var(--ink); text-decoration: none; }
+
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            .hero { padding: 48px 20px 40px; }
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 0 20px 48px; }
+            .stat-bar { flex-direction: column; }
+            .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
+            .stat-item:last-child { border-bottom: none; }
+            .dimension-grid { grid-template-columns: 1fr; }
+            .phase-grid { grid-template-columns: repeat(2, 1fr); }
+            .events-grid { grid-template-columns: 1fr; }
+            footer { flex-direction: column; gap: 8px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="nav-logo">
+            <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="14" cy="14" r="12" stroke="#e85d26" stroke-width="2.5"/>
+                <path d="M8 20 L14 8 L20 20" stroke="#e85d26" stroke-width="2" stroke-linejoin="round" fill="none"/>
+                <path d="M10.5 15 L17.5 15" stroke="#e85d26" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            ArcScore
+        </a>
+        <div class="nav-links">
+            <a href="/dimensions">Dimensions</a>
+            <a href="/pricing">Pricing</a>
+            <a href="/results/gallery" style="color: var(--ink);">Gallery</a>
+            <a href="/signup" class="btn-primary">Take Assessment</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-eyebrow">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            Public Gallery
+        </div>
+        <h1>What does the average Arc look like?</h1>
+        <p>Anonymized data from thousands of assessments across all 9 life dimensions. See where people score, what life events they track, and how arcs evolve over time.</p>
+        <div class="hero-actions">
+            <a href="/assess" class="btn-primary">Take the Assessment</a>
+            <a href="/" class="btn-secondary">Back to Home</a>
+        </div>
+    </section>
+
+    <!-- Stats bar loaded dynamically -->
+    <div class="section" id="stats-bar-container">
+        <div class="loading-state"><div class="spinner"></div>Loading aggregate data…</div>
+    </div>
+
+    <!-- Dimension Averages -->
+    <section class="section">
+        <div class="section-header">
+            <h2>Dimension Averages</h2>
+            <p>How do people score across the 9 life dimensions? Data shown is the mean score across all completed assessments.</p>
+        </div>
+        <div class="dimension-grid" id="dimension-grid">
+            <div class="loading-state"><div class="spinner"></div></div>
+        </div>
+    </section>
+
+    <!-- Growth Phases -->
+    <section class="section">
+        <div class="section-header">
+            <h2>The Arc Journey</h2>
+            <p>Where are people in their arc-tracking journey? Users are grouped by how many assessments they've completed.</p>
+        </div>
+        <div class="phase-grid" id="phase-grid">
+            <div class="loading-state"><div class="spinner"></div></div>
+        </div>
+    </section>
+
+    <!-- Life Events -->
+    <section class="section">
+        <div class="section-header">
+            <h2>What People Track</h2>
+            <p>The most common life events logged by ArcScore users. Each event is tagged to the dimensions it affected most.</p>
+        </div>
+        <div class="events-grid" id="events-grid">
+            <div class="loading-state"><div class="spinner"></div></div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <div class="cta-band">
+        <h2>See your own arc</h2>
+        <p>Free to start. Takes about 2 minutes. Score all 9 life dimensions and see where you stand.</p>
+        <a href="/assess" class="btn-primary">Start Your Assessment →</a>
+    </div>
+
+    <footer>
+        <span>© 2026 ArcScore</span>
+        <div>
+            <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/dimensions">Dimensions</a> · <a href="/pricing">Pricing</a>
+        </div>
+    </footer>
+
+    <script>
+        const BASE = '';
+
+        const ICONS = {
+            fitness: '🏋️', financial: '💰', relationships: '❤️', career: '💼',
+            mental_health: '🧠', learning: '📖', social: '🤝', habits: '🔁', purpose: '🎯'
+        };
+
+        const PHASE_ICONS = {
+            'Getting Started': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>',
+            'Building Momentum': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
+            'Tracking Progress': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+            'Arc Master': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>'
+        };
+
+        const EVENT_ICONS = {
+            'new_relationship': '💑', 'job_change': '💼', 'health_change': '🏃', 'moved': '🏠',
+            'became_parent': '👶', 'started_therapy': '🧠', 'financial_windfall': '💰', 'career_pivot': '🔄',
+            'personal_breakthrough': '🌟', 'loss': '💔', 'travel': '✈️', 'education_milestone': '🎓',
+            'fitness_improvement': '🏋️', 'relationship_improvement': '❤️', 'career_milestone': '🏆',
+            'default': '📌'
+        };
+
+        function scoreClass(score) {
+            if (score <= 3.5) return 'low';
+            if (score <= 5.5) return 'medium';
+            if (score <= 8) return 'high';
+            return 'excellent';
+        }
+
+        function scoreLabel(score) {
+            if (score <= 3.5) return 'Needs attention';
+            if (score <= 5.5) return 'Room to grow';
+            if (score <= 7) return 'Strong';
+            return 'Excellent';
+        }
+
+        function renderStatsBar(summary, maxAssessments) {
+            const n = summary.total_assessments || 0;
+            const container = document.getElementById('stats-bar-container');
+            container.innerHTML = `
+                <div class="stat-bar">
+                    <div class="stat-item">
+                        <div class="stat-number">${n.toLocaleString()}</div>
+                        <div class="stat-label">Assessments</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">9</div>
+                        <div class="stat-label">Dimensions</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${n > 0 ? Math.round(n * 2.3) : '—'}</div>
+                        <div class="stat-label">Life Events Tracked</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">Growth Phases</div>
+                    </div>
+                </div>`;
+        }
+
+        function renderDimensions(dims) {
+            const grid = document.getElementById('dimension-grid');
+            grid.innerHTML = dims.map(d => {
+                const barPct = Math.round((d.avg_score / 10) * 100);
+                const cls = scoreClass(d.avg_score);
+                const label = scoreLabel(d.avg_score);
+                return `
+                <div class="dim-card">
+                    <div class="dim-card-top">
+                        <div class="dim-icon">${ICONS[d.key] || '📊'}</div>
+                        <div class="dim-name">${d.name}</div>
+                    </div>
+                    <div class="dim-score">${d.avg_score.toFixed(1)}<span>/10</span></div>
+                    <div class="bar-track">
+                        <div class="bar-fill ${cls}" style="width: ${barPct}%"></div>
+                    </div>
+                    <div class="dim-meta">
+                        <span style="color: var(--dim);">${label}</span> · ${d.assessment_count.toLocaleString()} assessments
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderPhases(phases) {
+            const grid = document.getElementById('phase-grid');
+            const maxCount = Math.max(...phases.map(p => p.user_count), 1);
+            grid.innerHTML = phases.map(p => {
+                const barPct = Math.round((p.user_count / maxCount) * 100);
+                const icon = PHASE_ICONS[p.phase] || PHASE_ICONS['Getting Started'];
+                return `
+                <div class="phase-card">
+                    <div class="phase-tier">${icon}</div>
+                    <div class="phase-name">${p.phase}</div>
+                    <div class="phase-count">${p.user_count.toLocaleString()}</div>
+                    <div class="phase-label">users</div>
+                    <div class="phase-bar-track">
+                        <div class="phase-bar-fill" style="width: ${barPct}%"></div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderEvents(events) {
+            const grid = document.getElementById('events-grid');
+            if (!events || events.length === 0) {
+                grid.innerHTML = '<p style="color: var(--dim); font-size: 0.9rem; grid-column: 1/-1;">No life events data yet — check back as the community grows.</p>';
+                return;
+            }
+            grid.innerHTML = events.map(e => {
+                const icon = EVENT_ICONS[e.event_type] || EVENT_ICONS.default;
+                const dims = Array.isArray(e.dimensions) ? e.dimensions.slice(0, 5).join(', ') : '';
+                return `
+                <div class="event-card">
+                    <div class="event-icon">${icon}</div>
+                    <div class="event-body">
+                        <div class="event-name">${e.event_type.replace(/_/g, ' ').replace(/\b\/g, c => c.toUpperCase())}</div>
+                        <div class="event-dims">${dims ? 'Affects: ' + dims : 'Various dimensions'}</div>
+                        <div class="event-count-badge">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                            ${e.count.toLocaleString()} logged
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        async function load() {
+            try {
+                const res = await fetch(`${BASE}/api/gallery`);
+                if (!res.ok) throw new Error('Failed to load');
+                const data = await res.json();
+
+                renderStatsBar(data.summary || {}, 0);
+                renderDimensions(data.dimension_averages || []);
+                renderPhases(data.growth_phases || []);
+                renderEvents(data.trigger_events || []);
+            } catch (err) {
+                ['dimension-grid', 'phase-grid', 'events-grid'].forEach(id => {
+                    document.getElementById(id).innerHTML =
+                        '<p style="color: var(--dim); grid-column: 1/-1;">Data temporarily unavailable. <a href="/results/gallery">Refresh</a>.</p>';
+                });
+                document.getElementById('stats-bar-container').innerHTML =
+                    '<div class="stat-bar"><div class="stat-item"><div class="stat-number">—</div><div class="stat-label">Assessments</div></div><div class="stat-item"><div class="stat-number">9</div><div class="stat-label">Dimensions</div></div><div class="stat-item"><div class="stat-number">—</div><div class="stat-label">Life Events Tracked</div></div><div class="stat-item"><div class="stat-number">4</div><div class="stat-label">Growth Phases</div></div></div>';
+            }
+        }
+
+        load();
+    </script>
+</body>
+</html>
