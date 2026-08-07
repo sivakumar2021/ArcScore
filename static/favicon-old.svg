@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img">
+  <title>ArcScore</title>
+  <rect width="128" height="128" rx="28" fill="#e85d26" />
+  <path d="M34 90V38h18l18 38 18-38h18v52h-18V62l-18 38-18-38v28H34Z" fill="#fff"/>
+</svg>
