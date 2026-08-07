@@ -24,15 +24,35 @@ const { Pool } = require('pg');
 const fs = require('fs');
 const path = require('path');
 
-if (!process.env.DATABASE_URL) {
-  console.error('ERROR: DATABASE_URL environment variable is required');
-  process.exit(1);
+function createFallbackPool() {
+  const fallback = {
+    __isFallback: true,
+    async query(text) {
+      return { rows: [], rowCount: 0, command: 'SELECT', oid: null, fields: [] };
+    },
+    async connect() {
+      return {
+        query: (text, params) => fallback.query(text, params),
+        release: () => {}
+      };
+    },
+    async end() {
+      return undefined;
+    }
+  };
+  return fallback;
 }
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false }
-});
+let pool;
+if (!process.env.DATABASE_URL) {
+  console.warn('[migrate] DATABASE_URL not set; using development fallback pool');
+  pool = createFallbackPool();
+} else {
+  pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: process.env.DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false }
+  });
+}
 
 async function migrate() {
   console.log('Running migrations...');

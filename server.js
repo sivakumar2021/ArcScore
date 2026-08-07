@@ -3,6 +3,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const net = require('net');
 const session = require('express-session');
 const PgSession = require('connect-pg-simple')(session);
 
@@ -30,7 +31,48 @@ const scoresRoutes = require('./routes/scores');
 const waitlistRoutes = require('./routes/waitlist');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const requestedPort = Number(process.env.PORT || 3000);
+
+function isPortAvailable(port) {
+  return new Promise((resolve) => {
+    const tester = net.createServer();
+    tester.once('error', () => resolve(false));
+    tester.listen(port, '127.0.0.1', () => {
+      tester.close(() => resolve(true));
+    });
+  });
+}
+
+function listenOnPort(port) {
+  return new Promise(async (resolve, reject) => {
+    let candidate = port;
+    while (true) {
+      if (candidate < 1) {
+        candidate = 0;
+      }
+      const available = await isPortAvailable(candidate);
+      if (available) {
+        const server = app.listen(candidate, () => {
+          const actualPort = server.address().port;
+          console.log(`ArcScore server running on port ${actualPort}`);
+          resolve(server);
+        });
+        server.on('error', (err) => {
+          if (err.code === 'EADDRINUSE') {
+            console.warn(`[server] Port ${candidate} is busy; trying ${candidate + 1}`);
+            server.close();
+            resolve(listenOnPort(candidate + 1));
+            return;
+          }
+          reject(err);
+        });
+        return;
+      }
+      console.warn(`[server] Port ${candidate} is busy; trying ${candidate + 1}`);
+      candidate += 1;
+    }
+  });
+}
 
 function gaSnippet() {
   const id = process.env.GA_MEASUREMENT_ID;
@@ -469,6 +511,7 @@ app.get('/admin/leads/inbox', (req, res) => {
 
 // ─── START ───
 
-app.listen(port, () => {
-  console.log(`ArcScore server running on port ${port}`);
+listenOnPort(requestedPort).catch((err) => {
+  console.error('Failed to start server:', err.message || err);
+  process.exit(1);
 });
