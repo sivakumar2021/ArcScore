@@ -132,7 +132,7 @@ router.post('/guest/submit', async (req, res) => {
   (async () => {
     try {
       const { registerContact, sendEmail, buildWelcomeEmailHtml } = require('../services/email');
-      const APP_URL = process.env.APP_URL || 'https://arcscore-le6r.polsia.app';
+      const APP_URL = process.env.APP_URL || 'https://arcscore.app';
       await registerContact(newUser.email, newUser.name);
       const html = buildWelcomeEmailHtml(newUser.name, APP_URL);
       const firstName = newUser.name ? newUser.name.split(' ')[0] : 'there';

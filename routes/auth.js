@@ -6,7 +6,7 @@ const pool = require('../db');
 const { logEvent } = require('./analytics');
 const { sendEmail, registerContact, buildWelcomeEmailHtml } = require('../services/email');
 
-const APP_URL = process.env.APP_URL || 'https://arcscore-le6r.polsia.app';
+const APP_URL = process.env.APP_URL || 'https://arcscore.app';
 
 const router = express.Router();
 

@@ -14,7 +14,7 @@ const {
 } = require('../services/email');
 
 const router = express.Router();
-const APP_URL = process.env.APP_URL || 'https://arcscore-le6r.polsia.app';
+const APP_URL = process.env.APP_URL || 'https://arcscore.app';
 
 // Lightweight secret check — cron callers must pass ?secret=CRON_SECRET or X-Cron-Secret header.
 // Not a full auth system; just prevents accidental public triggers.

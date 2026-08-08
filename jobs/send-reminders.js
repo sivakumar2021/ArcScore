@@ -1,7 +1,7 @@
 // jobs/send-reminders.js — standalone job entry point for polsia.toml cron.
 // Calls POST /api/cron/send-reminders on the running web service.
 // The web endpoint enforces CRON_SECRET auth.
-const APP_URL = process.env.APP_URL || 'https://arcscore-le6r.polsia.app';
+const APP_URL = process.env.APP_URL || 'https://arcscore.app';
 const CRON_SECRET = process.env.CRON_SECRET;
 
 if (!CRON_SECRET) {

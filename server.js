@@ -169,12 +169,12 @@ Disallow: /life-events
 Disallow: /api/
 Disallow: /admin/
 
-Sitemap: https://arcscore-le6r.polsia.app/sitemap.xml`
+Sitemap: https://arcscore.app/sitemap.xml`
   );
 });
 
 app.get('/sitemap.xml', async (req, res) => {
-  const baseUrl = 'https://arcscore-le6r.polsia.app';
+  const baseUrl = 'https://arcscore.app';
   const today = new Date().toISOString().split('T')[0];
 
   let postEntries = '';
@@ -360,7 +360,7 @@ app.get('/blog/:slug', async (req, res) => {
   }
   if (!post) return res.status(404).type('html').send(buildPostNotFoundHtml());
 
-  const baseUrl = 'https://arcscore-le6r.polsia.app';
+  const baseUrl = 'https://arcscore.app';
   const pagePath = `/blog/${post.slug}`;
   const ogImage = post.cover_image_url || `${baseUrl}/og-image.svg`;
   const tags = Array.isArray(post.tags) ? post.tags : [];
@@ -427,7 +427,7 @@ app.get('/results/:id', (req, res) => {
 // Public shared results page — server-rendered OG tags for social crawlers
 app.get('/shared/:token', async (req, res) => {
   const token = req.params.token;
-  const baseUrl = 'https://arcscore-le6r.polsia.app';
+  const baseUrl = 'https://arcscore.app';
   const shareUrl = `${baseUrl}/shared/${encodeURIComponent(token)}`;
 
   // Default meta — overridden if we can fetch scores from DB

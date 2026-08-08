@@ -6,7 +6,7 @@ const { getSubscription, setSubscription, setSubscriptionByEmail, PLAN_NAMES, VA
 
 const router = express.Router();
 
-const APP_URL   = process.env.APP_URL   || 'https://arcscore-le6r.polsia.app';
+const APP_URL   = process.env.APP_URL   || 'https://arcscore.app';
 const API_URL   = process.env.POLSIA_API_URL || 'https://polsia.com';
 const API_KEY   = process.env.POLSIA_API_KEY || '';
 

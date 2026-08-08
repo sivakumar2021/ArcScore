@@ -1,7 +1,7 @@
 // jobs/send-drip.js — standalone job entry point for polsia.toml cron.
 // Calls POST /api/cron/send-drip on the running web service.
 // Processes all three drip steps (Day 0, Day 3, Day 7) in a single pass.
-const APP_URL = process.env.APP_URL || 'https://arcscore-le6r.polsia.app';
+const APP_URL = process.env.APP_URL || 'https://arcscore.app';
 const CRON_SECRET = process.env.CRON_SECRET;
 
 if (!CRON_SECRET) {
